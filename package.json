@@ -1,0 +1,31 @@
+{
+  "name": "booth-buddy",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Booth Buddy - QR code customer tagging for in-person events",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "dev": "npm run dev -w @booth-buddy/web",
+    "start": "node packages/web/dist/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint packages/*/src/**/*.ts --no-warn-ignored",
+    "lint:fix": "eslint packages/*/src/**/*.ts --fix --no-warn-ignored",
+    "typecheck": "npm run typecheck --workspaces",
+    "db:generate": "npm run db:generate -w @booth-buddy/shared",
+    "db:push": "npm run db:push -w @booth-buddy/shared",
+    "db:migrate": "npm run db:migrate -w @booth-buddy/shared"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.0",
+    "vitest": "^4.0.15"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}

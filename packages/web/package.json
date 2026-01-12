@@ -1,0 +1,36 @@
+{
+  "name": "@booth-buddy/web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Booth Buddy web server",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@booth-buddy/shared": "*",
+    "axios": "^1.6.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "csrf-csrf": "^3.0.0",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0",
+    "qrcode": "^1.5.3",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.6",
+    "@types/cors": "^2.8.17",
+    "@types/ejs": "^3.1.5",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.10.0",
+    "@types/qrcode": "^1.5.5",
+    "tsx": "^4.6.0",
+    "typescript": "^5.3.0"
+  }
+}
