@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '../index';
 import { createShopifyClient } from '../services/shopify';
-import { asyncHandler, errors } from '../middleware/error-handler';
+import { asyncHandler } from '../middleware/error-handler';
 import { csrfTokenMiddleware, csrfProtection } from '../middleware/csrf';
 
 const router = Router();
