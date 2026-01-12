@@ -2,7 +2,18 @@
 
 A QR code-based customer tagging system for Shopify stores at in-person events. Customers scan a QR code at your booth, enter their email, and get tagged in your Shopify store for follow-up marketing.
 
-## Single Store Setup Guide
+## Setup Options
+
+| Guide | Best For |
+|-------|----------|
+| **[Single Store Setup](SETUP_SINGLE_STORE.md)** | One store, simplest setup, no Partner account needed |
+| **[Multi-Store Setup](#multi-store-setup-guide)** (below) | Multiple stores, OAuth flow, requires Partner account |
+
+---
+
+## Multi-Store Setup Guide
+
+Use this if you want to install the app on multiple Shopify stores via OAuth.
 
 ### Prerequisites
 
