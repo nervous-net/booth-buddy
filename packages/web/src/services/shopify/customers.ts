@@ -257,6 +257,100 @@ export class CustomerOperations extends ShopifyClientBase {
   }
 
   /**
+   * Add tags to a customer (preserving existing tags)
+   */
+  async addTagsToCustomer(customerId: string, tagsToAdd: string[]) {
+    try {
+      // First, get existing tags
+      const customer = await this.getCustomer(customerId);
+      const existingTags = customer.tags ? customer.tags.split(',').map(t => t.trim()).filter(Boolean) : [];
+
+      // Merge with new tags (avoiding duplicates)
+      const allTags = [...new Set([...existingTags, ...tagsToAdd])];
+
+      // Update customer with merged tags
+      return await this.updateCustomerTags(customerId, allTags);
+    } catch (error) {
+      throw this.handleError(error, 'Failed to add tags to customer');
+    }
+  }
+
+  /**
+   * Create a new customer with optional tags
+   */
+  async createCustomerWithTags(options: { email: string; tags?: string[]; firstName?: string; lastName?: string }) {
+    try {
+      const mutation = `
+        mutation customerCreate($input: CustomerInput!) {
+          customerCreate(input: $input) {
+            customer {
+              id
+              email
+              firstName
+              lastName
+              tags
+              state
+              createdAt
+            }
+            userErrors {
+              field
+              message
+            }
+          }
+        }
+      `;
+
+      const data = await this.executeGraphQL<{
+        customerCreate: {
+          customer: {
+            id: string;
+            email: string;
+            firstName: string | null;
+            lastName: string | null;
+            tags: string[];
+            state: string;
+            createdAt: string;
+          } | null;
+          userErrors: Array<{ field: string[]; message: string }>;
+        };
+      }>(mutation, {
+        input: {
+          email: options.email,
+          firstName: options.firstName || null,
+          lastName: options.lastName || null,
+          tags: options.tags || [],
+          emailMarketingConsent: {
+            marketingState: 'NOT_SUBSCRIBED',
+            marketingOptInLevel: 'SINGLE_OPT_IN',
+          },
+        },
+      });
+
+      if (data.customerCreate.userErrors.length > 0) {
+        const errorMsg = data.customerCreate.userErrors.map(e => e.message).join(', ');
+        throw new ShopifyAPIError(`Failed to create customer: ${errorMsg}`);
+      }
+
+      const customer = data.customerCreate.customer;
+      if (!customer) {
+        throw new ShopifyAPIError('Customer creation failed');
+      }
+
+      return {
+        id: this.extractId(customer.id),
+        email: customer.email,
+        first_name: customer.firstName,
+        last_name: customer.lastName,
+        tags: customer.tags.join(', '),
+        state: customer.state.toLowerCase(),
+        created_at: customer.createdAt,
+      };
+    } catch (error) {
+      throw this.handleError(error, 'Failed to create customer');
+    }
+  }
+
+  /**
    * Send account activation email to customer
    */
   async sendAccountInvite(customerId: string) {

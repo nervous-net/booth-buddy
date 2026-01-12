@@ -6,6 +6,10 @@ import path from 'path';
 import { PrismaClient, validateEnv, getEnv } from '@booth-buddy/shared';
 import { errorHandler, notFoundHandler } from './middleware/error-handler';
 import { authLimiter, adminLimiter, webhookLimiter, scanLimiter } from './middleware/rate-limit';
+import authRoutes from './routes/auth';
+import adminRoutes from './routes/admin';
+import scanRoutes from './routes/scan';
+import webhookRoutes from './routes/webhooks';
 
 // Validate environment variables
 const env = validateEnv();
@@ -53,7 +57,7 @@ app.get('/health', (_req, res) => {
 });
 
 // Webhooks need raw body for HMAC verification - before JSON parsing
-// app.use('/webhooks', webhookLimiter, webhookRoutes);
+app.use('/webhooks', webhookLimiter, express.raw({ type: 'application/json' }), webhookRoutes);
 
 // JSON parsing
 app.use(express.json());
@@ -67,10 +71,10 @@ app.use('/auth', authLimiter);
 app.use('/admin', adminLimiter);
 app.use('/scan', scanLimiter);
 
-// Routes will be added here
-// app.use('/auth', authRoutes);
-// app.use('/admin', adminRoutes);
-// app.use('/scan', scanRoutes);
+// Routes
+app.use('/auth', authRoutes);
+app.use('/admin', adminRoutes);
+app.use('/scan', scanRoutes);
 
 // 404 handler
 app.use(notFoundHandler);
