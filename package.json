@@ -9,10 +9,10 @@
   ],
   "scripts": {
     "build": "npm run build --workspaces",
-    "dev": "npm run dev -w @booth-buddy/web",
+    "dev": "doppler run -- npm run dev -w @booth-buddy/web",
     "start": "node packages/web/dist/index.js",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "test": "doppler run -- vitest run",
+    "test:watch": "doppler run -- vitest",
     "lint": "eslint packages/*/src/**/*.ts --no-warn-ignored",
     "lint:fix": "eslint packages/*/src/**/*.ts --fix --no-warn-ignored",
     "typecheck": "npm run typecheck --workspaces",
